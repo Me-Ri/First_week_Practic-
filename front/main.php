@@ -1,3 +1,10 @@
+<?php
+session_start();
+if(!isset($_SESSION['user'])) {
+    header('Location: Sign.php');
+}
+?>
+
 <!doctype html>
 <html lang="ru">
 
@@ -80,7 +87,7 @@
 
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#asd"
 					aria-controls="asd" aria-expanded="false">
-					<a class="link-secondary" href="reg_form.html"><span class="info-reg">Выход</span></a>
+					<a class="link-secondary" href="signupAndLogin.php"><span class="info-reg">Выход</span></a>
 				</button>
 			</div>
 		</div>
