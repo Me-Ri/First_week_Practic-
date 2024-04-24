@@ -16,6 +16,7 @@
 		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 
+
 	<!-- Bootstrap core CSS -->
 	<link href="/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
@@ -36,17 +37,62 @@
 	<link rel="stylesheet"
 		href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
 
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 
 	<script src="/docs/5.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title" id="exampleModalLabel">Оформление заказа</h2>
+				</div>
+				<div class="modal-body">
+					<form class="row g-3">
+						<div class="col-md-12">
+							<select id="inputState" class="form-select h4">
+							  <option selected disabled value="">Способ доставки</option>
+							  <option>Самовывоз</option>
+							  <option>Курьер</option>
+							</select>
+						  </div>
+						<div class="col-4">
+						  <label for="inputAddress" class="form-label h3">Город</label>
+						  <input type="text" class="form-control" id="inputAddress" required>
+						</div>
+						<div class="col-4">
+							<label for="inputAddress" class="form-label h3">Улица</label>
+							<input type="text" class="form-control" id="inputAddress" required>
+						  </div>
+						  <div class="col-4">
+							<label for="inputAddress" class="form-label h3">Квартира</label>
+							<input type="text" class="form-control" id="inputAddress" required>
+						  </div>
+						<div class="col-12">
+							<label for="exampleFormControlTextarea1" class="form-label h3">Коментарий к заказу</label>
+							<textarea class="form-control mt-4" id="exampleFormControlTextarea1" rows="3"></textarea>
+						</div>
+					  </form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+					<button type="submit" class="btn btn-primary">Сохранить</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 	<div class="navbar navbar-dark bg-dark shadow-sm"><!--навигация-->
 		<div class="container-xxl">
 			<button class="navbar-toggler" type="button">
 				<!-- <span class="info-reg">Корзина</span> -->
-				<a  class="link-secondary" href="side.html"><span class="info-reg">Назад</span></a>
+				<a class="link-secondary" href="side.html"><span class="info-reg">Назад</span></a>
 			</button>
 		</div>
 	</div>
@@ -60,7 +106,7 @@
 		</div>
 	</section>
 
-	<main>
+	<main> <!--карточки заказов-->
 		<div class="album py-5 bg-light">
 			<div class="rounded-pill card mx-auto mb-3 w-75" id="card_block_1">
 				<div class="rounded-pill card-header text-uppercase text-center">
@@ -104,12 +150,13 @@
 					</div>
 				</div>
 			</div>
-			<div class="zac">
-				<button type="button" class="rounded-pill btn btn-primary w-25"">Заказать</button>
+			<div class="d-flex justify-content-center">
+				<button type="button" class="rounded-pill btn btn-primary w-25" data-toggle="modal"
+					data-target="#exampleModal">Заказать (2997p)</button>
 			</div>
 		</div>
-		
-</main>
+
+	</main>
 	<footer class=" text-muted py-5 bg-dark">
 		<div class="container-xxl">Тут что то будет, а пока что я footer</div>
 	</footer>
