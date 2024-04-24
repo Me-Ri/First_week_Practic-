@@ -202,14 +202,6 @@ a:focus {
   }
 }
 
-.price{
-  font-size: larger;
-  margin-left: 3vw;
-  display: flex;
-  align-content: center;
-  flex-wrap: wrap;
-}
-
 .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;
