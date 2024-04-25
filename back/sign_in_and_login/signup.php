@@ -11,10 +11,6 @@
     require_once("../dbConnection.php");
     $password = md5($password);
     $query = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
-    // $prepare = $pdo -> prepare($query);
-    // $prepare->bindValue(1, $email);
-    // $prepare->bindValue(2, $password);
-    // $prepare->execute();
     $check_user = $pdo -> query($query);
     $number_of_rows = $check_user -> rowCount();
     if($number_of_rows > 0) {

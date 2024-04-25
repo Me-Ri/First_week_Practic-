@@ -1,8 +1,11 @@
-<?php
+<?php  
 session_start();
 if(!isset($_SESSION['user'])) {
     header('Location: Sign.php');
 }
+require_once 'connect.php';
+$query = mysqli_query($connect, "SELECT * FROM Items");
+$query = mysqli_fetch_all($query);
 ?>
 
 <!doctype html>
@@ -48,6 +51,96 @@ if(!isset($_SESSION['user'])) {
 
 
 	<script src="/docs/5.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	<!--Форма добавление нового товара-->
+    <form action="upload.php" method="post" enctype="multipart/form-data">
+    <div class="modal fade" id="managerModal" tabindex="-1" aria-labelledby="managerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLabel">Новый товар</h2>
+                </div>
+                <div class="modal-body">
+                    <form class="row g-3">
+                        <div class="col-6">
+                            <label for="inputAddress" class="form-label h3">Название</label>
+                            <input type="text" name='name' class="form-control" id="inputAddress" required>
+                        </div>
+                        <div class="col-6">
+                            <label for="inputAddress" class="form-label h3">Цена</label>
+                            <input type="number" name='price' class="form-control" id="inputAddress" required>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group mb-3 h4">
+                                <span require class="input-group-text h4" id="inputGroupFileAddon01">Изображение</span>
+                                <div class="form-file">
+                                    <input type="file" name="image" class="form-file-input" id="inputGroupFile01"
+                                        aria-describedby="inputGroupFileAddon01">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="exampleFormControlTextarea1" class="form-label h3">Описание</label>
+                            <textarea class="form-control mt-4" name="description" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </form>
+
+	<!--Форма редактирования товара-->
+	<div class="modal fade" id="managerModalRedact" tabindex="-1" aria-labelledby="managerModalRedactLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title" id="exampleModalLabel">Редактирование</h2>
+				</div>
+				<div class="modal-body">
+					<form class="row g-3">
+						<div class="col-6">
+							<label for="inputAddress" class="form-label h3">Название</label>
+							<input type="text" class="form-control" id="inputAddress" required>
+						</div>
+						<div class="col-6">
+							<label for="inputAddress" class="form-label h3">Цена</label>
+							<input type="number" class="form-control" id="inputAddress" required>
+						</div>
+						<div class="col-12">
+							<div class="input-group mb-3 h4">
+								<span class="input-group-text h4" id="inputGroupFileAddon01">Изображение</span>
+								<div class="form-file">
+									<input type="file" class="form-file-input" id="inputGroupFile01"
+										aria-describedby="inputGroupFileAddon01">
+								</div>
+							</div>
+						</div>
+						<div class="col-12">
+							<label for="exampleFormControlTextarea1" class="form-label h3">Описание</label>
+							<textarea class="form-control mt-4" id="exampleFormControlTextarea1" rows="3"></textarea>
+						</div>
+						<div class="col-12">
+							<label for="exampleFormControlTextarea1" class="form-label h3">Ингридиенты(через
+								запятую)</label>
+							<textarea class="form-control mt-4" id="exampleFormControlTextarea1" rows="3"></textarea>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+					<button type="submit" class="btn btn-primary">Сохранить</button>
+					<button type="submit" class="btn btn-primary">Удалить</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<header>
 
@@ -74,9 +167,12 @@ if(!isset($_SESSION['user'])) {
 
 		<div class="navbar navbar-dark bg-dark shadow-sm"><!--навигация-->
 			<div class="container-xxl">
-				<button class="navbar-toggler" type="button">
-					<!-- <span class="info-reg">Корзина</span> -->
-					<a class="link-secondary" href="basket.html"><span class="info-reg">Корзина</span></a>
+				<button class="navbar-toggler" type="button"> <!--Убирать для менеджера-->
+					<a class="link-secondary" href="basket.php"><span class="info-reg">Корзина</span></a>
+				</button>
+				<!--Добавить для менеджера-->
+				<button type="button" class="navbar-toggler link-secondary" data-toggle="modal"
+					data-target="#managerModal"><span class="info-reg">Добавить товар</span>
 				</button>
 
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -84,10 +180,15 @@ if(!isset($_SESSION['user'])) {
 					aria-label="Переключить навигацию">
 					<span class="info-reg">Мой заказ</span>
 				</button>
-
+				<!--Убрать для авторизованных-->
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#asd"
 					aria-controls="asd" aria-expanded="false">
-					<a class="link-secondary" href="signupAndLogin.php"><span class="info-reg">Выход</span></a>
+					<a class="link-secondary" href="reg_form.html"><span class="info-reg">Вход</span></a>
+				</button>
+				<!--Убрать для не авторизованных-->
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#asd"
+					aria-controls="asd" aria-expanded="false">
+					<a class="link-secondary" href="reg_form.html"><span class="info-reg">Выход</span></a>
 				</button>
 			</div>
 		</div>
@@ -103,62 +204,51 @@ if(!isset($_SESSION['user'])) {
 				</div>
 			</div>
 		</section>
+		<?php 
+		$cards = mysqli_query($connect, "SELECT * FROM Items");
+		
+		?>
 
 		<div class="album py-5 bg-light">
 			<div class="container-xxl"><!--карточка товара-->
 				<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+				<?php
+					 while ($card = mysqli_fetch_assoc($cards)) {
+					?>
 					<div class="col">
 						<div class="card shadow-sm">
-							<img src="https://aif-s3.aif.ru/images/019/066/ab47449af04fdde2d5adbadaff8fa271.jpg">
+							<img style="max-height: 28rem; min-height: 28rem;" src="<?php echo $card['img_pass'] ?>">
 							<div class="card-body">
 								<div class="row">
-									<div class="col-9 h2">
-										Название товара
+									<div class="col-8 h2">
+										<?php echo $card['Name'] ?>
 									</div>
-									<div class="col-3 text-center h2 d-flex justify-content-center">
-										999р
+									<div class="col-4 text-center h2 d-flex justify-content-center">
+										<?php echo $card['Price'] ?> р
 									</div>
 								</div>
-								<p class="card-text">Тут будет описание товара</p>
+								<p class="card-text"><?php echo $card['Description']?></p>
 								<div class="row">
-									<div class="col-12 text-center d-flex justify-content-center mb-1 d-none ">
+									<!--Показывать для менеджера d-none-->
+									<form action="edit.php" method="post" enctype="multipart/form-data">			
+										<input type="hidden" name='id' value="<?php echo $card['id'] ?>">
+										
+									<div class="col-12 text-center d-flex justify-content-center mb-1">
 										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
+											<button type="submit" class="navbar-toggler link-secondary"
+												data-toggle="modal" data-target="#managerModalRedact"><span
+													class="info-reg">Редактировать</span>
 											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
 										</div>
 									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<button type="button" class="btn btn-sm btn-secondary"
+									</form>
+									<div class="col text-center d-flex justify-content-center">								
+									<form action="addToCart.php" method="post" enctype="multipart/form-data">
+										<input type="hidden" name="id" value="<?php echo $card['id'] ?>">
+										<button type="submit" class="btn btn-sm btn-secondary"
 											onclick=viewDiv1()>Добавить в
 											корзину</button>
+									</form>
 									</div>
 									<div class="col text-center d-flex justify-content-center">
 										<div class="dropdown w-75">
@@ -194,767 +284,14 @@ if(!isset($_SESSION['user'])) {
 											</ul>
 										</div>
 									</div>
-									
+
 
 								</div>
 							</div>
-							
+
 						</div>
-					</div>
-					<div class="col">
-						<div class="card shadow-sm">
-							<img src="https://aif-s3.aif.ru/images/019/066/ab47449af04fdde2d5adbadaff8fa271.jpg">
-							<div class="card-body">
-								<div class="row">
-									<div class="col-9 h2">
-										Название товара
-									</div>
-									<div class="col-3 text-center h2 d-flex justify-content-center">
-										999р
-									</div>
-								</div>
-								<p class="card-text">Тут будет описание товара</p>
-								<div class="row">
-									<div class="col-12 text-center d-flex justify-content-center mb-1 d-none ">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<button type="button" class="btn btn-sm btn-secondary"
-											onclick=viewDiv1()>Добавить в
-											корзину</button>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									
-
-								</div>
-							</div>
-							
-						</div>
-					</div>
-					<div class="col">
-						<div class="card shadow-sm">
-							<img src="https://aif-s3.aif.ru/images/019/066/ab47449af04fdde2d5adbadaff8fa271.jpg">
-							<div class="card-body">
-								<div class="row">
-									<div class="col-9 h2">
-										Название товара
-									</div>
-									<div class="col-3 text-center h2 d-flex justify-content-center">
-										999р
-									</div>
-								</div>
-								<p class="card-text">Тут будет описание товара</p>
-								<div class="row">
-									<div class="col-12 text-center d-flex justify-content-center mb-1 d-none ">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<button type="button" class="btn btn-sm btn-secondary"
-											onclick=viewDiv1()>Добавить в
-											корзину</button>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									
-
-								</div>
-							</div>
-							
-						</div>
-					</div>
-
-					<div class="col">
-						<div class="card shadow-sm">
-							<img src="https://aif-s3.aif.ru/images/019/066/ab47449af04fdde2d5adbadaff8fa271.jpg">
-							<div class="card-body">
-								<div class="row">
-									<div class="col-9 h2">
-										Название товара
-									</div>
-									<div class="col-3 text-center h2 d-flex justify-content-center">
-										999р
-									</div>
-								</div>
-								<p class="card-text">Тут будет описание товара</p>
-								<div class="row">
-									<div class="col-12 text-center d-flex justify-content-center mb-1 d-none ">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<button type="button" class="btn btn-sm btn-secondary"
-											onclick=viewDiv1()>Добавить в
-											корзину</button>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									
-
-								</div>
-							</div>
-							
-						</div>
-					</div>
-					<div class="col">
-						<div class="card shadow-sm">
-							<img src="https://aif-s3.aif.ru/images/019/066/ab47449af04fdde2d5adbadaff8fa271.jpg">
-							<div class="card-body">
-								<div class="row">
-									<div class="col-9 h2">
-										Название товара
-									</div>
-									<div class="col-3 text-center h2 d-flex justify-content-center">
-										999р
-									</div>
-								</div>
-								<p class="card-text">Тут будет описание товара</p>
-								<div class="row">
-									<div class="col-12 text-center d-flex justify-content-center mb-1 d-none ">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<button type="button" class="btn btn-sm btn-secondary"
-											onclick=viewDiv1()>Добавить в
-											корзину</button>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									
-
-								</div>
-							</div>
-							
-						</div>
-					</div>
-					<div class="col">
-						<div class="card shadow-sm">
-							<img src="https://aif-s3.aif.ru/images/019/066/ab47449af04fdde2d5adbadaff8fa271.jpg">
-							<div class="card-body">
-								<div class="row">
-									<div class="col-9 h2">
-										Название товара
-									</div>
-									<div class="col-3 text-center h2 d-flex justify-content-center">
-										999р
-									</div>
-								</div>
-								<p class="card-text">Тут будет описание товара</p>
-								<div class="row">
-									<div class="col-12 text-center d-flex justify-content-center mb-1 d-none ">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<button type="button" class="btn btn-sm btn-secondary"
-											onclick=viewDiv1()>Добавить в
-											корзину</button>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									
-
-								</div>
-							</div>
-							
-						</div>
-					</div>
-
-					<div class="col">
-						<div class="card shadow-sm">
-							<img src="https://aif-s3.aif.ru/images/019/066/ab47449af04fdde2d5adbadaff8fa271.jpg">
-							<div class="card-body">
-								<div class="row">
-									<div class="col-9 h2">
-										Название товара
-									</div>
-									<div class="col-3 text-center h2 d-flex justify-content-center">
-										999р
-									</div>
-								</div>
-								<p class="card-text">Тут будет описание товара</p>
-								<div class="row">
-									<div class="col-12 text-center d-flex justify-content-center mb-1 d-none ">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<button type="button" class="btn btn-sm btn-secondary"
-											onclick=viewDiv1()>Добавить в
-											корзину</button>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									
-
-								</div>
-							</div>
-							
-						</div>
-					</div>
-					<div class="col">
-						<div class="card shadow-sm">
-							<img src="https://aif-s3.aif.ru/images/019/066/ab47449af04fdde2d5adbadaff8fa271.jpg">
-							<div class="card-body">
-								<div class="row">
-									<div class="col-9 h2">
-										Название товара
-									</div>
-									<div class="col-3 text-center h2 d-flex justify-content-center">
-										999р
-									</div>
-								</div>
-								<p class="card-text">Тут будет описание товара</p>
-								<div class="row">
-									<div class="col-12 text-center d-flex justify-content-center mb-1 d-none ">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<button type="button" class="btn btn-sm btn-secondary"
-											onclick=viewDiv1()>Добавить в
-											корзину</button>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									
-
-								</div>
-							</div>
-							
-						</div>
-					</div>
-					<div class="col">
-						<div class="card shadow-sm">
-							<img src="https://aif-s3.aif.ru/images/019/066/ab47449af04fdde2d5adbadaff8fa271.jpg">
-							<div class="card-body">
-								<div class="row">
-									<div class="col-9 h2">
-										Название товара
-									</div>
-									<div class="col-3 text-center h2 d-flex justify-content-center">
-										999р
-									</div>
-								</div>
-								<p class="card-text">Тут будет описание товара</p>
-								<div class="row">
-									<div class="col-12 text-center d-flex justify-content-center mb-1 d-none ">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<button type="button" class="btn btn-sm btn-secondary"
-											onclick=viewDiv1()>Добавить в
-											корзину</button>
-									</div>
-									<div class="col text-center d-flex justify-content-center">
-										<div class="dropdown w-75">
-											<button class="btn btn-secondary dropdown-toggle" type="button"
-												id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-												Редактировать
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">лук</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">огурец</label>
-													</div>
-												</li>
-												<li>
-													<div class="form-check form-switch h4">
-														<input class="form-check-input" type="checkbox"
-															id="flexSwitchCheckChecked" checked>
-														<label class="form-check-label"
-															for="flexSwitchCheckChecked">перец</label>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									
-
-								</div>
-							</div>
-							
-						</div>
-					</div>
+					 </div>
+					<?php }?>
 				</div>
 			</div>
 		</div>
