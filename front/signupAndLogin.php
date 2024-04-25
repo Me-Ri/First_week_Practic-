@@ -1,3 +1,10 @@
+<?php 
+    session_start();
+    if(isset($_SESSION['user'])) {
+        header('Location: main.php');
+    }
+?>
+
 <!doctype html>
 <html lang="ru">
 
@@ -52,53 +59,74 @@
 						<li role="presentation"><a href="#Section2" aria-controls="profile" role="tab"
 								data-toggle="tab">sign up</a>
 						</li>
-						<li role="presentation"><a href="side.html">back</a>
-					</li>
+						<li role="presentation"><a href="main.php">back</a>
+						</li>
 					</ul>
 
 					<div class="tab-content tabs">
-						
+
 						<div role="tabpanel" class="tab-pane fade in active" id="Section1">
-							<form class="form-horizontal">
+							<form class="form-horizontal" method="post" action="../back/sign_in_and_login/signup.php">
 								<div class="form-group">
-									<label for="exampleInputEmail1">username</label>
-									<input type="email" class="form-control" id="exampleInputEmail1">
+									<label for="exampleInputEmail1">email</label>
+									<input type="email" class="form-control" id="exampleInputEmail1" name="Email">
 								</div>
 								<div class="form-group">
 									<label for="exampleInputPassword1">Password</label>
-									<input type="password" class="form-control" id="exampleInputPassword1">
+									<input type="password" class="form-control" id="exampleInputPassword1"
+										name="Password">
 								</div>
 								<div class="form-group">
 									<button type="submit" class="btn btn-default">Sign in</button>
 								</div>
+								<?php
+								if(isset($_SESSION['message'])) {
+									echo '<p> ' . $_SESSION['message'] . '</p>';
+								} 
+								unset($_SESSION['message']);
+								?>
 							</form>
 						</div>
 
 						<div role="tabpanel" class="tab-pane fade" id="Section2">
-							<form class="form-horizontal">
+							<form class="form-horizontal" method="post"
+								action="../back/sign_in_and_login/createAcc.php">
 								<div class="form-group">
 									<label for="exampleInputEmail1">First Name</label>
-									<input type="text" class="form-control" id="exampleInputEmail1">
+									<input type="text" class="form-control" id="exampleInputEmail1" name="Name">
 								</div>
 
 								<div class="form-group">
 									<label for="exampleInputEmail1">Last Name</label>
-									<input type="text" class="form-control" id="exampleInputEmail1">
+									<input type="text" class="form-control" id="exampleInputEmail1" name="Surname">
 								</div>
 
 								<div class="form-group">
 									<label for="exampleInputEmail1">Email address</label>
-									<input type="email" class="form-control" id="exampleInputEmail1">
+									<input type="email" class="form-control" id="exampleInputEmail1" name="Email">
 								</div>
 
 								<div class="form-group">
 									<label for="exampleInputPassword1">Password</label>
-									<input type="password" class="form-control" id="exampleInputPassword1">
+									<input type="password" class="form-control" id="exampleInputPassword1"
+										name="Password">
+								</div>
+
+								<div class="form-group">
+									<label for="exampleInputPassword1">Confirm Password</label>
+									<input type="password" class="form-control" id="exampleInputPassword1"
+										name="CPassword">
 								</div>
 
 								<div class="form-group">
 									<button type="submit" class="btn btn-default">Sign up</button>
 								</div>
+								<?php
+								if(isset($_SESSION['message'])) {
+									echo '<p> ' . $_SESSION['message'] . '</p>';
+								} 
+								unset($_SESSION['message']);
+								?>
 							</form>
 
 						</div>

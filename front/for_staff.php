@@ -12,8 +12,7 @@
 	<link rel="canonical" href="https://getbootstrap.su/docs/5.0/examples/album/">
 	<link rel="stylesheet" href="css.css">
 
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 
 	<!-- Bootstrap core CSS -->
@@ -33,8 +32,7 @@
 </head>
 
 <body>
-	<link rel="stylesheet"
-		href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -104,20 +102,45 @@
 				</div>
 			</div>
 		</div>
-		
-</main>
-	<footer class=" text-muted py-5 bg-dark">
-					<div class="container-xxl">Тут что то будет, а пока что я footer</div>
-					</footer>
 
-					<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-						integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-						crossorigin="anonymous"></script>
-					<script src="/docs/5.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	</main>
+	<footer class="text-center text-lg-start text-white" style="background-color: #212529">
+		<div class="container p-4 pb-0">
+			<section class="">
+				<div class="row">
 
-					<script>
-						function delNode(el) { el.parentNode.parentNode.parentNode.style.display = "none"; }
-					</script>
+					<div class="col-6 text-center">
+						<h6 class="text-uppercase mb-4 font-weight-bold h3">
+							Ссылки
+						</h6>
+						<p>
+							<a href="https://github.com/Me-Ri/First_week_Practic-" class="text-white">GitHab</a>
+						</p>
+					</div>
+
+					<hr class="w-100 clearfix d-md-none">
+
+					<div class="col-6 text-center">
+						<h6 class="text-uppercase mb-4 font-weight-bold h3">Контакты</h6>
+						<p><i class="fas fa-home mr-3"></i> Ханты-Мансийск, ул.Чехова, 16</p>
+						<p><i class="fas fa-envelope mr-3"></i> egor.evdakimov@yandex.ru</p>
+						<p><i class="fas fa-phone mr-3"></i> +7 902 592 57 30</p>
+					</div>
+				</div>
+			</section>
+
+			<hr class="my-3">
+		</div>
+	</footer>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+	<script src="/docs/5.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+	<script>
+		function delNode(el) {
+			el.parentNode.parentNode.parentNode.style.display = "none";
+		}
+	</script>
 
 </body>
 
