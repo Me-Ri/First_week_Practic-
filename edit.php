@@ -1,6 +1,10 @@
 <?php 
 require_once('connect.php');
+if(empty($_POST['id'])) {
+	header("Location: side.php");
+}
 $item_id = $_POST['id'];
+
 $items = mysqli_query($connect, "SELECT * FROM `Items` WHERE `id` = '$item_id'");
 $item = mysqli_fetch_assoc($items);
 
@@ -207,6 +211,9 @@ $item = mysqli_fetch_assoc($items);
             <label>Загрузите фотографию блюда</label> 
             <input type="file" name="image">
             <br>
+			<label>Введите название блюда</label> <br>
+            <input type="text" name="name" value="<?php echo $item['Name'] ?>" style="margin-bottom: 10px">
+            <br>
             <label>Введите описание блюда</label> <br>
             <input type="text" name="description" value="<?php echo $item['Description'] ?>" style="margin-bottom: 10px">
             <br>
@@ -219,6 +226,7 @@ $item = mysqli_fetch_assoc($items);
         <form action="deleteItem.php" method="post" enctype="multipart/form-data"> 
             <input type="hidden" name="id" value="<?php echo $item_id ?>">
             <button type="submit" style="margin-left: 20px">Удалить блюдо</button>
+		</form>
 
 	</main>
 

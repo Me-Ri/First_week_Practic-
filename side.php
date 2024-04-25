@@ -49,7 +49,9 @@ session_start();
 
 	<script src="/docs/5.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 	<!--Форма добавление нового товара-->
+	<form action="addToCart.php" method="post" enctype="multipart/form-data">
 	<div class="modal fade" id="managerModal" tabindex="-1" aria-labelledby="managerModalLabel" aria-hidden="true">
+		
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -91,7 +93,9 @@ session_start();
 				</div>
 			</div>
 		</div>
+		
 	</div>
+	</form>
 
 	<!--Форма редактирования товара-->
 	<div class="modal fade" id="managerModalRedact" tabindex="-1" aria-labelledby="managerModalRedactLabel"
@@ -225,18 +229,21 @@ session_start();
 										<?php echo $card['Price'] ?> р
 									</div>
 								</div>
-								<p class="card-text">Тут будет описание товара</p>
+								<p class="card-text"><?php echo $card['Description']?></p>
 								<div class="row">
-									<!--Показывать для менеджера-->
-									<div class="col-12 text-center d-flex justify-content-center mb-1 d-none">
-
+									<!--Показывать для менеджера d-none-->
+									<form action="edit.php" method="post" enctype="multipart/form-data">			
+										<input type="hidden" name='id' value="<?php echo $card['id'] ?>">
+										
+									<div class="col-12 text-center d-flex justify-content-center mb-1">
 										<div class="dropdown w-75">
-											<button type="button" class="navbar-toggler link-secondary"
+											<button type="submit" class="navbar-toggler link-secondary"
 												data-toggle="modal" data-target="#managerModalRedact"><span
 													class="info-reg">Редактировать</span>
 											</button>
 										</div>
 									</div>
+									</form>
 									<div class="col text-center d-flex justify-content-center">								
 									<form action="addToCart.php" method="post" enctype="multipart/form-data">
 										<input type="hidden" name="id" value="<?php echo $card['id'] ?>">
