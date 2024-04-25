@@ -9,7 +9,6 @@
     $dsn = "pgsql:host=$host;port=21533;dbname=$db;user=$username;password=$password";
     try{
         echo "Connected to the <strong>$db</strong> database successfully! <br><br>";
-
         $conn = new PDO($dsn);
         if($conn){
 
