@@ -1,6 +1,6 @@
 <?php 
 session_start();
-require_once 'connect.php';
+require_once '../dbConnection.php';
 
 $user_id = $_POST['user_id'];
 $street = $_POST['street'];
@@ -11,20 +11,20 @@ $comment = $_POST['description'];
 $items_list = $_POST['items_list'];
 $total_price = $_POST['total_price'];
 $status = "В обработке";
+$address = $street . " " . $house . " " . $flat;
 
-$query = 'INSERT INTO Orders (User_ID, Street, House, Flat, Time_Duration, Comment, Status, Items_List, Total_Price)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+$query = 'INSERT INTO Orders (User_ID, Courer_ID, Time_Duration, Status, Item_List, Total_Price, Address, Comment)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 $prepare = $pdo -> prepare($query);
 if($prepare) {
     $prepare->bindValue(1, $user_id);
-    $prepare->bindValue(2, $street);
-    $prepare->bindValue(3, $house);
-    $prepare->bindValue(4, $flat);
-    $prepare->bindValue(5, $time);
-    $prepare->bindValue(6, $comment);
-    $prepare->bindValue(7, $status);
-    $prepare->bindValue(8, $items_list);
-    $prepare->bindValue(9, $total_price);
+    $prepare->bindValue(2, null);
+    $prepare->bindValue(3, $time);
+    $prepare->bindValue(4, $status);
+    $prepare->bindValue(5, $items_list);
+    $prepare->bindValue(6, $total_price);
+    $prepare->bindValue(7, $address);
+    $prepare->bindValue(8, $comment);
     $prepare->execute();
 }
 else {
@@ -32,12 +32,12 @@ else {
 }
 
 try {
-    $query = "DELETE FROM Cart WHERE User_ID = '$user_id'";
+    $query = "DELETE FROM User_Item WHERE User_ID = '$user_id'";
     $pdo->exec($query);
 }
 catch (PDOException $e) {
-    echo "Database error: " . $e->getMessage();
+    die($e->getMessage());
 }
 
-header("Location: basket.php");
+header("Location: ../../front/basket.php");
 ?>

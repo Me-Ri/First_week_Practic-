@@ -1,8 +1,14 @@
 <?php 
-require_once('connect.php');
+require_once('../dbConnection.php');
 $item_id = $_POST['id'];
 
+try {
+    $query = "DELETE FROM Items WHERE Item_ID ='$item_id'";
+    $pdo->exec($query);
+}
+catch (PDOException $e) {
+    die($e->getMessage());
+}
 
-mysqli_query($connect, "DELETE FROM Items WHERE Item_ID ='$item_id'");
-header("Location: side.php");
+header("Location: ../../front/main.php");
 ?>

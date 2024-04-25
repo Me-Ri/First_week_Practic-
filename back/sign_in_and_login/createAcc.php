@@ -20,13 +20,14 @@
     require_once("../dbConnection.php");
     if($password === $cpass) {
         $password = md5($password);
-        $query = 'INSERT INTO users (name, surname, email, password) VALUES (?, ?, ?, ?)';
+        $query = 'INSERT INTO customer (Name, Surname, Email, Password, Role) VALUES (?, ?, ?, ?, ?)';
         $prepare = $pdo -> prepare($query);
         if($prepare) {
             $prepare->bindValue(1, $name);
             $prepare->bindValue(2, $surname);
             $prepare->bindValue(3, $email);
             $prepare->bindValue(4, $password);
+            $prepare->bindValue(5, "User");
             $prepare->execute();
         }
         else {
@@ -40,5 +41,5 @@
         $pdo = null;
         header("../../front/signupAndLogin.php");
     }
-    header("Location: ../../front/signIupAndLogin.php");
+    header("Location: ../../front/signupAndLogin.php");
 ?>
