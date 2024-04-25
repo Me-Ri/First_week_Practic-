@@ -61,12 +61,21 @@
 		<div class="album py-5 bg-light">
 			<div class="rounded-pill card mx-auto mb-3 w-75 " id="card_block_1">
 				<div class="rounded-pill card-header text-uppercase text-center ">
-					<div class="container w-75">
+					<div class="container w-75 my-5">
 						<div class="col">
 							<h1>Заказ №12345</h1>
 						</div>
 						<div class="col">
-							<h2>Пользователь</h2>
+							<h2>Пользователь: Андрюха</h2>
+						</div>
+						<div class="col"> <!--Скрыть для курьера-->
+							<h2>Курьер: Леха</h2>
+						</div>
+						<div class="col"> <!--Скрыть для кухни-->
+							<h2>Адрес: г.Мухосранск ул.Блаблабла кв.13</h2>
+						</div>
+						<div class="col">
+							<h2>Сумма: 2997р</h2>
 						</div>
 						<div class="row">
 							<div class="col w-25 ml-3">
@@ -80,63 +89,15 @@
 							</div>
 							<div class="col w-25 ml-3">
 								<label for="exampleFormControlTextarea1" class="form-label h3">Коментарий к заказу</label>
-								<textarea class="form-control mt-4" id="exampleFormControlTextarea1" rows="1"></textarea>
+								<textarea class="form-control mt-4 mb-2" id="exampleFormControlTextarea1" rows="1"></textarea>
 							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-
-			<div class="rounded-pill card mx-auto mb-3 w-75 " id="card_block_1">
-				<div class="rounded-pill card-header text-uppercase text-center ">
-					<div class="container w-75">
-						<div class="col">
-							<h1>Заказ №12345</h1>
-						</div>
-						<div class="col">
-							<h2>Пользователь</h2>
 						</div>
 						<div class="row">
-							<div class="col w-25 ml-3">
-								<label for="validationCustom04" class="form-label h3">Статус</label>
-								<select class="form-select h3 mt-4" id="validationCustom04" required>
-									<option selected disabled value="">Choose...</option>
-									<option class="h4">На кухне</option>
-									<option class="h4">Ждет курьера</option>
-									<option class="h4">...</option>
-								</select>
+							<div class="col text-center d-flex justify-content-center">
+								<button type="button" class="rounded-pill btn btn-primary">Принять</button>
 							</div>
-							<div class="col w-25 ml-3">
-								<label for="exampleFormControlTextarea1" class="form-label h3">Коментарий к заказу</label>
-								<textarea class="form-control mt-4" id="exampleFormControlTextarea1" rows="1"></textarea>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="rounded-pill card mx-auto mb-3 w-75 " id="card_block_1">
-				<div class="rounded-pill card-header text-uppercase text-center ">
-					<div class="container w-75">
-						<div class="col">
-							<h1>Заказ №12345</h1>
-						</div>
-						<div class="col">
-							<h2>Пользователь</h2>
-						</div>
-						<div class="row">
-							<div class="col w-25 ml-3">
-								<label for="validationCustom04" class="form-label h3">Статус</label>
-								<select class="form-select h3 mt-4" id="validationCustom04" required>
-									<option selected disabled value="">Choose...</option>
-									<option class="h4">На кухне</option>
-									<option class="h4">Ждет курьера</option>
-									<option class="h4">...</option>
-								</select>
-							</div>
-							<div class="col w-25 ml-3">
-								<label for="exampleFormControlTextarea1" class="form-label h3">Коментарий к заказу</label>
-								<textarea class="form-control mt-4" id="exampleFormControlTextarea1" rows="1"></textarea>
+							<div class="col text-center d-flex justify-content-center"> <!--Скрыть для менеджера-->
+								<button type="button" class="rounded-pill btn btn-primary">Подтвердить передачу</button>
 							</div>
 						</div>
 					</div>
