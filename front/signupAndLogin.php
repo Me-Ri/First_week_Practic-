@@ -1,8 +1,8 @@
-<?php 
-    session_start();
-    if(isset($_SESSION['user'])) {
-        header('Location: main.php');
-    }
+<?php
+session_start();
+if (isset($_SESSION['user'])) {
+	header('Location: main.php');
+}
 ?>
 
 <!doctype html>
@@ -19,8 +19,7 @@
 	<link rel="canonical" href="https://getbootstrap.su/docs/5.0/examples/album/">
 	<link rel="stylesheet" href="css.css">
 
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 
 	<!-- Bootstrap core CSS -->
@@ -40,8 +39,7 @@
 </head>
 
 <body>
-	<link rel="stylesheet"
-		href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -54,13 +52,11 @@
 			<div class="col-md-offset-3 col-md-6">
 				<div class="tab" role="tabpanel">
 					<ul class="nav nav-tabs" role="tablist">
-						<li role="presentation" class="active"><a href="#Section1" aria-controls="home" role="tab"
-								data-toggle="tab">sign in</a></li>
-						<li role="presentation"><a href="#Section2" aria-controls="profile" role="tab"
-								data-toggle="tab">sign up</a>
+						<li role="presentation" class="active"><a href="#Section1" aria-controls="home" role="tab" data-toggle="tab">sign in</a></li>
+						<li role="presentation"><a href="#Section2" aria-controls="profile" role="tab" data-toggle="tab">sign up</a>
 						</li>
-						<li role="presentation"><a href="main.php">back</a>
-						</li>
+						<!-- <li role="presentation"><a href="main.php">back</a>
+						</li> -->
 					</ul>
 
 					<div class="tab-content tabs">
@@ -73,24 +69,22 @@
 								</div>
 								<div class="form-group">
 									<label for="exampleInputPassword1">Password</label>
-									<input type="password" class="form-control" id="exampleInputPassword1"
-										name="Password">
+									<input type="password" class="form-control" id="exampleInputPassword1" name="Password">
 								</div>
 								<div class="form-group">
 									<button type="submit" class="btn btn-default">Sign in</button>
 								</div>
 								<?php
-								if(isset($_SESSION['message'])) {
-									echo '<p> ' . $_SESSION['message'] . '</p>';
-								} 
+								if (isset($_SESSION['message'])) {
+									echo '<label class = "h3 text-danger"> ' . $_SESSION['message'] . '</label>';
+								}
 								unset($_SESSION['message']);
 								?>
 							</form>
 						</div>
 
 						<div role="tabpanel" class="tab-pane fade" id="Section2">
-							<form class="form-horizontal" method="post"
-								action="../back/sign_in_and_login/createAcc.php">
+							<form class="form-horizontal" method="post" action="../back/sign_in_and_login/createAcc.php">
 								<div class="form-group">
 									<label for="exampleInputEmail1">First Name</label>
 									<input type="text" class="form-control" id="exampleInputEmail1" name="Name">
@@ -108,25 +102,17 @@
 
 								<div class="form-group">
 									<label for="exampleInputPassword1">Password</label>
-									<input type="password" class="form-control" id="exampleInputPassword1"
-										name="Password">
+									<input type="password" class="form-control" id="exampleInputPassword1" name="Password">
 								</div>
 
 								<div class="form-group">
 									<label for="exampleInputPassword1">Confirm Password</label>
-									<input type="password" class="form-control" id="exampleInputPassword1"
-										name="CPassword">
+									<input type="password" class="form-control" id="exampleInputPassword1" name="CPassword">
 								</div>
 
 								<div class="form-group">
 									<button type="submit" class="btn btn-default">Sign up</button>
 								</div>
-								<?php
-								if(isset($_SESSION['message'])) {
-									echo '<p> ' . $_SESSION['message'] . '</p>';
-								} 
-								unset($_SESSION['message']);
-								?>
 							</form>
 
 						</div>
@@ -136,9 +122,7 @@
 		</div>
 	</div>
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 	<script src="/docs/5.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
 

@@ -20,6 +20,9 @@
             "name" => $user['name'],
             "role" => $user['role']
         ];
+        if($user['role'] == "Cook") {
+            header("Location: ../../front/for_staff.php");
+        }
         header('Location: ../../front/main.php');
     }
     else {

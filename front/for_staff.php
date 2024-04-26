@@ -116,6 +116,9 @@ $stmt_orders = $pdo->query($query_orders);
 				<!-- <span class="info-reg">Корзина</span> -->
 				<a class="link-secondary" href="main.php"><span class="info-reg">Назад</span></a>
 			</button>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#asd" aria-controls="asd" aria-expanded="false">
+				<a class="link-secondary" href="../back/sign_in_and_login/logout.php"><span class="info-reg">Выход</span></a>
+			</button>
 		</div>
 	</div>
 
@@ -249,7 +252,7 @@ $stmt_orders = $pdo->query($query_orders);
 		</div>
 	</main>
 
-	<footer class="text-center text-lg-start text-white" style="background-color: #212529">
+	<footer class="text-center text-lg-start text-white fixed-bottom" style="background-color: #212529">
 		<div class="container p-4 pb-0">
 			<section class="">
 				<div class="row">

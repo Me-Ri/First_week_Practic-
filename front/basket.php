@@ -2,6 +2,10 @@
 session_start();
 if(!isset($_SESSION['user'])) {
 	header("Location: signupAndLogin.php");
+} else if($_SESSION['user']['role'] == "Cook") {
+	header("Location: for_staff.php");
+} else if($_SESSION['user']['role'] == "Manager") {
+	header("Location: main.php");
 }
 require_once '../back/dbConnection.php';
 ?>
@@ -178,7 +182,7 @@ require_once '../back/dbConnection.php';
 </div>
 </div>
 	</main>
-	<footer class="text-center text-lg-start text-white" style="background-color: #212529">
+	<footer class="text-center text-lg-start text-white fixed-bottom" style="background-color: #212529">
 		<div class="container p-4 pb-0">
 			<section class="">
 				<div class="row">
