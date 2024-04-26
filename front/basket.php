@@ -1,5 +1,8 @@
 <?php
 session_start();
+if(!isset($_SESSION['user'])) {
+	header("Location: signupAndLogin.php");
+}
 require_once '../back/dbConnection.php';
 ?>
 
@@ -113,7 +116,7 @@ require_once '../back/dbConnection.php';
 				?>
 				<div class="d-flex justify-content-center">
 					<button type="button" class="rounded-pill btn btn-primary w-25" data-toggle="modal" data-target="#exampleModal">Заказать (
-						<?php echo $total_price ?>)
+						<?php echo $total_price . " руб" ?>)
 					</button>
 				</div>
 			<?php
@@ -153,7 +156,10 @@ require_once '../back/dbConnection.php';
 				<div class="col-12">
 					<select class="form-select h3" name="time_dur" aria-label="Default select example">
 						<option selected>Как можно скорее</option>
-						<option></option>
+						<option><?php echo date('H:i',time()+(2 * 3600)+3600); ?></option>
+                                <option><?php echo date('H:i',time()+(2 * 3600)+(3600 * 1.5)); ?></option>
+                                <option><?php echo date('H:i',time()+(2 * 3600)+(3600 * 2)); ?></option>
+                                <option><?php echo date('H:i',time()+(2 * 3600)+(3600 * 2.5)); ?></option>
 					</select>
 				</div>
 				<div class="col-12">

@@ -1,3 +1,73 @@
+<?php
+session_start();
+if (!isset($_SESSION['user'])) {
+	header("Location: signupAndLogin.php");
+} else if ($_SESSION['user']['role'] == "User") {
+	header("Location: main.php");
+}
+require_once '../back/dbConnection.php';
+
+// Получение роли текущего пользователя
+$user_id = $_SESSION['user']['id'];
+$user_role = $_SESSION['user']['role'];
+$query_role = "SELECT role FROM customer WHERE user_id = :user_id";
+$stmt_role = $pdo->prepare($query_role);
+$stmt_role->execute(['user_id' => $user_id]);
+$user_role = $stmt_role->fetchColumn();
+
+// Формирование запроса к базе данных в зависимости от роли пользователя
+switch ($user_role) {
+	case 'Manager':
+		$fields = '*';
+		break;
+	case 'Cook':
+		$fields = 'order_id, user_id, courer_id, total_price, status';
+		break;
+	case 'Courier':
+		$fields = 'order_id, user_id, address, comment, total_price, status';
+		break;
+	default:
+		break;
+}
+
+// Получение доступных статусов для текущей роли
+$statuses = [];
+switch ($user_role) {
+	case 'Cook':
+		$statuses = ['в готовке', 'ожидает курьера', 'переданно курьеру', 'отмена'];
+		break;
+	case 'Courier':
+		$statuses = ['доставляется', 'доставлен', 'возникла ошибка'];
+		break;
+	case 'Manager':
+		$statuses = ['в обработке', 'ожидает готовки', 'в готовке', 'ожидает курьера', 'переданно курьеру', 'переданно курьеру', 'отмена', 'доставляется', 'доставлен', 'возникла ошибка'];
+		break;
+}
+
+// Обработка формы выбора статуса заказа
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+	$order_id = $_POST['order_id'];
+	$new_status = $_POST['status'];
+	if ($user_role == 'Courier') {
+		$query_update_status = "UPDATE orders SET courer_id = :user_id, status = :status WHERE order_id = :order_id";
+		$stmt_update_status = $pdo->prepare($query_update_status);
+		$stmt_update_status->execute(['user_id' => $user_id, 'status' => $new_status, 'order_id' => $order_id]);
+	}
+
+	// Проверка, может ли текущий пользователь устанавливать данный статус
+	if (in_array($new_status, $statuses)) {
+		// Обновление статуса заказа в базе данных
+		$query_update_status = "UPDATE orders SET status = :status WHERE order_id = :order_id";
+		$stmt_update_status = $pdo->prepare($query_update_status);
+		$stmt_update_status->execute(['status' => $new_status, 'order_id' => $order_id]);
+	}
+}
+
+// Запрос к базе данных для получения данных о заказах
+$query_orders = "SELECT $fields FROM orders";
+$stmt_orders = $pdo->query($query_orders);
+?>
+
 <!doctype html>
 <html lang="ru">
 
@@ -57,53 +127,125 @@
 
 	<main>
 		<div class="album py-5 bg-light">
-			<div class="rounded-pill card mx-auto mb-3 w-75 " id="card_block_1">
-				<div class="rounded-pill card-header text-uppercase text-center ">
-					<div class="container w-75 my-5">
-						<div class="col">
-							<h1>Заказ №12345</h1>
-						</div>
-						<div class="col">
-							<h2>Пользователь: Андрюха</h2>
-						</div>
-						<div class="col"> <!--Скрыть для курьера-->
-							<h2>Курьер: Леха</h2>
-						</div>
-						<div class="col"> <!--Скрыть для кухни-->
-							<h2>Адрес: г.Мухосранск ул.Блаблабла кв.13</h2>
-						</div>
-						<div class="col">
-							<h2>Сумма: 2997р</h2>
-						</div>
-						<div class="row">
-							<div class="col w-25 ml-3">
-								<label for="validationCustom04" class="form-label h3">Статус</label>
-								<select class="form-select h3 mt-4" id="validationCustom04" required>
-									<option selected disabled value="">Choose...</option>
-									<option class="h4">На кухне</option>
-									<option class="h4">Ждет курьера</option>
-									<option class="h4">...</option>
-								</select>
+			<?php while ($row = $stmt_orders->fetch(PDO::FETCH_ASSOC)) {
+				// Проверка доступности заказа для текущей роли и статуса
+				if ($user_role == 'Cook' && !in_array($row['status'], ['ожидает готовки', 'в готовке', 'ожидает курьера', 'отмена'])) {
+					continue;
+				} elseif ($user_role == 'Courier' && !in_array($row['status'], ['в готовке', 'ожидает курьера', 'доставляется', 'доставлен', 'возникла ошибка'])) {
+					continue;
+				} ?>
+
+				<div class="rounded-pill card mx-auto mb-3 w-75" id="card_block_<?php echo $row['order_id']; ?>">
+					<div class="rounded-pill card-header text-uppercase text-center">
+						<div class="container w-75">
+							<div class="row">
+								<h1>
+									Заказ №<?php echo $row['order_id']; ?>
+								</h1>
 							</div>
-							<div class="col w-25 ml-3">
-								<label for="exampleFormControlTextarea1" class="form-label h3">Коментарий к заказу</label>
-								<textarea class="form-control mt-4 mb-2" id="exampleFormControlTextarea1" rows="1"></textarea>
+							<div class="row">
+								<h2>
+									Пользователь: <?php echo $row['user_id']; ?>
+								</h2>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col text-center d-flex justify-content-center">
-								<button type="button" class="rounded-pill btn btn-primary">Принять</button>
+							<?php if ($user_role == 'Cook' || $user_role == 'Manager') { ?>
+								<div class="row">
+									<h2>
+										Курьер: <?php echo $row['courer_id']; ?>
+									</h2>
+								</div>
+							<?php } ?>
+							<?php if ($user_role == 'Courier' || $user_role == 'Manager') { ?>
+								<div class="row">
+									<h2>
+										Адрес: <?php echo $row['address']; ?>
+									</h2>
+								</div>
+							<?php } ?>
+							<?php if ($user_role == 'Courier' || $user_role == 'Manager') { ?>
+								<div class="row">
+									<h2>
+										Комментарий: <textarea readonly><?php echo $row['comment']; ?></textarea>
+									</h2>
+								</div>
+							<?php } ?>
+							<div class="row">
+								<h2>
+									Сумма: <?php echo $row['total_price']; ?>р
+								</h2>
 							</div>
-							<div class="col text-center d-flex justify-content-center"> <!--Скрыть для менеджера-->
-								<button type="button" class="rounded-pill btn btn-primary">Подтвердить передачу</button>
+							<div class="row">
+								<h2>
+									Статус: <?php echo $row['status']; ?>
+								</h2>
 							</div>
+							<!-- Меню выбора для каждой роли -->
+							<?php if ($user_role == 'Manager') { ?>
+								<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+									<input type="hidden" name="order_id" value="<?php echo $row['order_id']; ?>">
+									<select name="status">
+										<?php foreach ($statuses as $status) { ?>
+											<option value="<?php echo $status; ?>"><?php echo $status; ?></option>
+										<?php } ?>
+									</select>
+									<button type="submit" class="rounded-pill btn btn-primary">Изменить статус</button>
+								</form>
+							<?php } ?>
+							<?php if ($user_role == 'Cook') { ?>
+								<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+									<input type="hidden" name="order_id" value="<?php echo $row['order_id']; ?>">
+									<select name="status">
+										<option value="в готовке">в готовке</option>
+										<option value="ожидает курьера">ожидает курьера</option>
+										<option value="отмена">отмена</option>
+										<option value="переданно курьеру">переданно курьеру</option>
+									</select>
+									<button type="submit" class="rounded-pill btn btn-primary">Изменить статус</button>
+								</form>
+							<?php } ?>
+							<?php if ($user_role == 'Courier') { ?>
+								<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+									<input type="hidden" name="order_id" value="<?php echo $row['order_id']; ?>">
+									<select name="status">
+										<option value="доставляется">доставляется</option>
+										<option value="доставлен">доставлен</option>
+										<option value="возникла ошибка">возникла ошибка</option>
+									</select>
+									<?php if ($user_role == 'Courier' && ($row['status'] == 'в готовке' || $row['status'] == 'отменен' || $row['status'] == 'доставлен')) { ?>
+										<button disabled type="submit" class="rounded-pill btn btn-primary">Изменить статус</button>
+									<?php } ?>
+									<?php if ($user_role == 'Courier' && $row['status'] == 'ожидает курьера' || $row['status'] == 'переданно курьеру' || $row['status'] == 'доставляется' || $row['status'] == 'возникла ошибка') { ?>
+										<button type="submit" class="rounded-pill btn btn-primary">Изменить статус</button>
+
+									<?php } ?>
+								</form>
+							<?php } ?>
+							<!-- <div class="row">
+								<div class="col w-25 ml-3">
+									<label for="validationCustom04" class="form-label h3">Смена статуса</label>
+									<select class="form-select h3 mt-4" id="validationCustom04" required>
+										<option selected disabled value="">Choose...</option>
+										<option class="h4">На кухне</option>
+										<option class="h4">Ждет курьера</option>
+										<option class="h4">...</option>
+									</select>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col text-center d-flex justify-content-center">
+									<button type="button" class="rounded-pill btn btn-primary">Принять</button>
+								</div>
+								<div class="col text-center d-flex justify-content-center"> <!--Скрыть для менеджера-->
+							<!-- <button type="button" class="rounded-pill btn btn-primary">переданно курьеру</button>
+								</div>
+							</div> -->
 						</div>
 					</div>
 				</div>
-			</div>
+			<?php } ?>
 		</div>
-
 	</main>
+
 	<footer class="text-center text-lg-start text-white" style="background-color: #212529">
 		<div class="container p-4 pb-0">
 			<section class="">

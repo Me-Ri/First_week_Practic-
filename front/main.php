@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (!isset($_SESSION['user'])) {
+	header("Location: signupAndLogin.php");
+}
 require_once '../back/dbConnection.php';
 ?>
 
@@ -95,43 +98,47 @@ require_once '../back/dbConnection.php';
 					<h2 class="modal-title" id="exampleModalLabel">Редактирование</h2>
 				</div>
 				<div class="modal-body">
-					<form class="row g-3">
+					<form action="../back/CRUD/updateItem.php" class="row g-3" method="post" enctype="multipart/form-data">
 						<div class="col-6">
 							<label for="inputAddress" class="form-label h3">Название</label>
-							<input type="text" class="form-control" id="inputAddress" required>
+							<input name="name" type="text" class="form-control" id="inputName" required>
 						</div>
 						<div class="col-6">
 							<label for="inputAddress" class="form-label h3">Цена</label>
-							<input type="number" class="form-control" id="inputAddress" required>
+							<input name="price" type="number" class="form-control" id="inputPrice" required>
 						</div>
 						<div class="col-12">
 							<div class="input-group mb-3 h4">
 								<span class="input-group-text h4" id="inputGroupFileAddon01">Изображение</span>
 								<div class="form-file">
-									<input type="file" class="form-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+									<input type="file" name="image" class="form-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
 								</div>
 							</div>
 						</div>
 						<div class="col-12">
 							<label for="exampleFormControlTextarea1" class="form-label h3">Описание</label>
-							<textarea class="form-control mt-4" id="exampleFormControlTextarea1" rows="3"></textarea>
+							<textarea name="description" class="form-control mt-4" id="desc" rows="3"></textarea>
 						</div>
-						<div class="col-12">
-							<label for="exampleFormControlTextarea1" class="form-label h3">Ингридиенты(через
-								запятую)</label>
-							<textarea class="form-control mt-4" id="exampleFormControlTextarea1" rows="3"></textarea>
+						<input name="id" id="item_id" type="hidden" value="">
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+							<button type="submit" class="btn btn-primary">Сохранить</button>
 						</div>
+
 					</form>
+					<div class="modal-footer">
+						<form action="../back/CRUD/deleteItem.php" style="margin-top: 10px" method="post" enctype="multipart/form-data">
+							<input name="id" id="item_id1" type="hidden">
+							<button type="submit" class="btn btn-primary">Удалить</button>
+						</form>
+					</div>
+
+
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-					<button type="submit" class="btn btn-primary">Сохранить</button>
-					<button type="submit" class="btn btn-primary">Удалить</button>
-				</div>
+
 			</div>
 		</div>
 	</div>
-
 	<header>
 
 		<?php
@@ -166,20 +173,39 @@ require_once '../back/dbConnection.php';
 
 		<div class="navbar navbar-dark bg-dark shadow-sm"><!--навигация-->
 			<div class="container-xxl">
-				<button class="navbar-toggler" type="button"> <!--Убирать для менеджера-->
-					<a class="link-secondary" href="basket.php"><span class="info-reg">Корзина</span></a>
-				</button>
-				<!--Добавить для менеджера-->
-				<button type="button" class="navbar-toggler link-secondary" data-toggle="modal" data-target="#managerModal"><span class="info-reg">Добавить товар</span>
-				</button>
-
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeaderOrder" aria-controls="navbarHeaderOrder" aria-expanded="false" aria-label="Переключить навигацию">
-					<span class="info-reg">Мой заказ</span>
-				</button>
-				<!--Убрать для авторизованных-->
+				<?php
+				if ($_SESSION['user']['role'] != "Manager") {
+				?>
+					<button class="navbar-toggler" type="button"> <!--Убирать для менеджера-->
+						<a class="link-secondary" href="basket.php"><span class="info-reg">Корзина</span></a>
+					</button>
+				<?php
+				}
+				if ($_SESSION['user']['role'] == "Manager") {
+				?>
+					<button type="button" class="navbar-toggler link-secondary" data-toggle="modal" data-target="#managerModal"><span class="info-reg">Добавить товар</span>
+					</button>
+				<?php
+				}
+				if ($_SESSION['user']['role'] != "User") {
+				?>
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#asd" aria-controls="asd" aria-expanded="false">
+						<a class="link-secondary" href="for_staff.php"><span class="info-reg">Заказы</span></a>
+					</button>
+				<?php
+				}
+				if ($_SESSION['user']['role'] != "Manager") {
+				?>
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeaderOrder" aria-controls="navbarHeaderOrder" aria-expanded="false" aria-label="Переключить навигацию">
+						<span class="info-reg">Мой заказ</span>
+					</button>
+				<?php
+				}
+				?>
+				<!-- Убрать для авторизованных
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#asd" aria-controls="asd" aria-expanded="false">
 					<a class="link-secondary" href="signupAndLogin.php"><span class="info-reg">Вход</span></a>
-				</button>
+				</button> -->
 				<!--Убрать для не авторизованных-->
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#asd" aria-controls="asd" aria-expanded="false">
 					<a class="link-secondary" href="../back/sign_in_and_login/logout.php"><span class="info-reg">Выход</span></a>
@@ -231,52 +257,56 @@ require_once '../back/dbConnection.php';
 									</p>
 									<div class="row">
 										<!--Показывать для менеджера d-none-->
-										<form action="edit.php" method="post" enctype="multipart/form-data">
-											<input type="hidden" name='id' value="<?php echo $card['item_id'] ?>">
-
+										<?php
+										if ($_SESSION['user']['role'] == "Manager") {
+										?>
 											<div class="col-12 text-center d-flex justify-content-center mb-1">
 												<div class="dropdown w-75">
-													<button type="submit" class="navbar-toggler link-secondary" data-toggle="modal" data-target="#managerModalRedact"><span class="info-reg">Редактировать</span>
+													<button type="button" onclick="getModal(`<?php echo $card['name'] ?>`,<?php echo $card['price'] ?>, `<?php echo $card['description'] ?>`,<?php echo $card['item_id'] ?> )" class="navbar-toggler link-secondary" data-toggle="modal" data-target="#managerModalRedact"><span class="info-reg">Редактировать</span>
 													</button>
 												</div>
 											</div>
-										</form>
-										<div class="col text-center d-flex justify-content-center">
-											<form action="../back/CRUD/addToCart.php" method="post" enctype="multipart/form-data">
-												<input type="hidden" name="id" value="<?php echo $card['item_id'] ?>">
-												<button type="submit" class="btn btn-sm btn-secondary" onclick=viewDiv1()>Добавить в
-													корзину</button>
-											</form>
-										</div>
-										<div class="col text-center d-flex justify-content-center">
-											<div class="dropdown w-75">
-												<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-													Редактировать
-												</button>
-												<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-													<li>
-														<div class="form-check form-switch h4">
-															<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-															<label class="form-check-label" for="flexSwitchCheckChecked">лук</label>
-														</div>
-													</li>
-													<li>
-														<div class="form-check form-switch h4">
-															<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-															<label class="form-check-label" for="flexSwitchCheckChecked">огурец</label>
-														</div>
-													</li>
-													<li>
-														<div class="form-check form-switch h4">
-															<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-															<label class="form-check-label" for="flexSwitchCheckChecked">перец</label>
-														</div>
-													</li>
-												</ul>
+										<?php
+										}
+										if ($_SESSION['user']['role'] != "Manager") {
+										?>
+											<div class="col text-center d-flex justify-content-center">
+												<form action="../back/CRUD/addToCart.php" method="post" enctype="multipart/form-data">
+													<input type="hidden" name="id" value="<?php echo $card['item_id'] ?>">
+													<button type="submit" class="btn btn-sm btn-secondary" onclick=viewDiv1()>Добавить в
+														корзину</button>
+												</form>
 											</div>
-										</div>
-
-
+											<div class="col text-center d-flex justify-content-center">
+												<div class="dropdown w-75">
+													<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+														Редактировать
+													</button>
+													<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+														<li>
+															<div class="form-check form-switch h4">
+																<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+																<label class="form-check-label" for="flexSwitchCheckChecked">лук</label>
+															</div>
+														</li>
+														<li>
+															<div class="form-check form-switch h4">
+																<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+																<label class="form-check-label" for="flexSwitchCheckChecked">огурец</label>
+															</div>
+														</li>
+														<li>
+															<div class="form-check form-switch h4">
+																<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+																<label class="form-check-label" for="flexSwitchCheckChecked">перец</label>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+										<?php
+										}
+										?>
 									</div>
 								</div>
 
@@ -334,6 +364,14 @@ require_once '../back/dbConnection.php';
 		function viewDiv3() {
 			document.getElementById("card_block_3").style.display = "block";
 		};
+
+		function getModal(name, price, desc, id) {
+			document.getElementById("inputName").value = name;
+			document.getElementById("inputPrice").value = price;
+			document.getElementById("desc").innerText = desc;
+			document.getElementById("item_id").value = id;
+			document.getElementById("item_id1").value = id;
+		}
 	</script>
 
 	<script>
