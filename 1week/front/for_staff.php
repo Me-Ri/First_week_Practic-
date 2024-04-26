@@ -105,7 +105,18 @@
 
 	<div class="navbar navbar-dark bg-dark shadow-sm"><!--навигация-->
 		<div class="container-xxl">
-
+		<button class="navbar-toggler" type="button">
+			<?php if($_SESSION['user']['role'] != "Cook") {
+			?>
+				<!-- <span class="info-reg">Корзина</span> -->
+				<a class="link-secondary" href="main.php"><span class="info-reg">Назад</span></a>
+			</button>
+			<?php 
+			}
+			?>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#asd" aria-controls="asd" aria-expanded="false">
+					<a class="link-secondary" href="../back/sign_in_and_login/logout.php"><span class="info-reg">Выход</span></a>
+				</button>
 		</div>
 	</div>
 
