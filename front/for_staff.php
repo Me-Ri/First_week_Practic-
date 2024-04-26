@@ -32,7 +32,7 @@
 			$statuses = ['в готовке', 'ожидает курьера', 'переданно курьеру', 'отмена'];
 			break;
 		case 'Courier':
-			$statuses = ['доставляется', 'доставлен', 'возникла ошибка'];
+			$statuses = ['готов доставить','доставляется', 'доставлен', 'возникла ошибка'];
 			break;
 		case 'Manager':
 			$statuses = ['в обработке', 'ожидает готовки', 'в готовке', 'ожидает курьера', 'переданно курьеру','переданно курьеру', 'отмена', 'доставляется', 'доставлен', 'возникла ошибка'];
@@ -49,9 +49,7 @@
 			$stmt_update_status->execute(['user_id' => $user_id, 'status' => $new_status, 'order_id' => $order_id]);
 		}
 
-		// Проверка, может ли текущий пользователь устанавливать данный статус
 		if (in_array($new_status, $statuses)) {
-			// Обновление статуса заказа в базе данных
 			$query_update_status = "UPDATE orders SET status = :status WHERE order_id = :order_id";
 			$stmt_update_status = $pdo->prepare($query_update_status);
 			$stmt_update_status->execute(['status' => $new_status, 'order_id' => $order_id]);
@@ -124,9 +122,9 @@
         <div class="album py-5 bg-light">
             <?php while ($row = $stmt_orders->fetch(PDO::FETCH_ASSOC)) { 
 				// Проверка доступности заказа для текущей роли и статуса
-				if ($user_role == 'Cook' && !in_array($row['status'], ['ожидает готовки', 'в готовке', 'ожидает курьера', 'отмена'])) {
+				if ($user_role == 'Cook' && !in_array($row['status'], ['ожидает готовки', 'в готовке', 'ожидает курьера', 'отмена', 'готов доставить'])) {
 					continue;
-				} elseif ($user_role == 'Courier' && !in_array($row['status'], ['в готовке', 'ожидает курьера', 'доставляется', 'доставлен', 'возникла ошибка'])) {
+				} elseif ($user_role == 'Courier' && !in_array($row['status'], ['в готовке', 'готов доставить', 'ожидает курьера', 'доставляется', 'возникла ошибка'])) {
 					continue;
 				} ?>
 
@@ -202,11 +200,12 @@
 								<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 									<input type="hidden" name="order_id" value="<?php echo $row['order_id']; ?>">
 									<select name="status">
+										<option value="готов доставить">готов доставить</option>
 										<option value="доставляется">доставляется</option>
 										<option value="доставлен">доставлен</option>
 										<option value="возникла ошибка">возникла ошибка</option>
 									</select>
-									<?php if ($user_role == 'Courier' && ($row['status'] == 'в готовке' || $row['status'] == 'отменен' || $row['status'] == 'доставлен' )) { ?>
+									<?php if ($user_role == 'Courier' && ($row['status'] == 'в готовке' || $row['status'] == 'отменен' || $row['status'] == 'доставлен' || $row['status'] == 'готов доставить')) { ?>
 										<button disabled type="submit" class="rounded-pill btn btn-primary">Изменить статус</button>
 									<?php } ?>
 									<?php if ($user_role == 'Courier' && $row['status'] == 'ожидает курьера' || $row['status'] == 'переданно курьеру' || $row['status'] == 'доставляется'|| $row['status'] == 'возникла ошибка') { ?>
