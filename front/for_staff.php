@@ -112,7 +112,10 @@ $stmt_orders = $pdo->query($query_orders);
 
 	<div class="navbar navbar-dark bg-dark shadow-sm"><!--навигация-->
 		<div class="container-xxl">
-
+			<button class="navbar-toggler" type="button">
+				<!-- <span class="info-reg">Корзина</span> -->
+				<a class="link-secondary" href="main.php"><span class="info-reg">Назад</span></a>
+			</button>
 		</div>
 	</div>
 
