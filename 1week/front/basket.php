@@ -182,34 +182,6 @@ require_once '../back/dbConnection.php';
 </div>
 </div>
 	</main>
-	<footer class="text-center text-lg-start text-white fixed-bottom" style="background-color: #212529">
-		<div class="container p-4 pb-0">
-			<section class="">
-				<div class="row">
-
-					<div class="col-6 text-center">
-						<h6 class="text-uppercase mb-4 font-weight-bold h3">
-							Ссылки
-						</h6>
-						<p>
-							<a href="https://github.com/Me-Ri/First_week_Practic-" class="text-white">GitHab</a>
-						</p>
-					</div>
-
-					<hr class="w-100 clearfix d-md-none">
-
-					<div class="col-6 text-center">
-						<h6 class="text-uppercase mb-4 font-weight-bold h3">Контакты</h6>
-						<p><i class="fas fa-home mr-3"></i> Ханты-Мансийск, ул.Чехова, 16</p>
-						<p><i class="fas fa-envelope mr-3"></i> egor.evdakimov@yandex.ru</p>
-						<p><i class="fas fa-phone mr-3"></i> +7 902 592 57 30</p>
-					</div>
-				</div>
-			</section>
-
-			<hr class="my-3">
-		</div>
-	</footer>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 	<script src="/docs/5.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
