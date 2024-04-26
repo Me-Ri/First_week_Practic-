@@ -1,6 +1,6 @@
 <?php
-session_start();
-require_once '../back/dbConnection.php';
+	session_start();
+	require_once '../back/dbConnection.php';
 ?>
 
 <!doctype html>
@@ -123,54 +123,54 @@ require_once '../back/dbConnection.php';
 			?>
 		</div>
 
-		<!-- Modal -->
-	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-dialog modal-dialog-centered">
 
-	<div class="modal-content">
-		<div class="modal-header">
-			<h2 class="modal-title" id="exampleModalLabel">Оформление заказа</h2>
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title" id="exampleModalLabel">Оформление заказа</h2>
+				</div>
+				<div class="modal-body">
+					<form action="../back/CRUD/createOrder.php" method="post" enctype="multipart/form-data" class="row g-3">
+						<input type="hidden" name="user_id" value="<?php echo $user_id ?>">
+						<input type="hidden" name="total_price" value="<?php echo $total_price ?>">
+						<input type="hidden" name="items_list" value="<?php echo $total_items ?>">
+						<div class="col-4">
+							<label for="inputAddress" class="form-label h3">Улица</label>
+							<input type="text" name="street" class="form-control" id="inputAddress" required>
+						</div>
+						<div class="col-4">
+							<label for="inputAddress" class="form-label h3">Дом</label>
+							<input type="text" name="house" class="form-control" id="inputAddress" required>
+						</div>
+						<div class="col-4">
+							<label for="inputAddress" class="form-label h3">Квартира</label>
+							<input type="text" name="flat" class="form-control" id="inputAddress" required>
+						</div>
+
+						<div class="col-12">
+							<select class="form-select h3" name="time_dur" aria-label="Default select example">
+								<option selected>Как можно скорее</option>
+								<option></option>
+							</select>
+						</div>
+						<div class="col-12">
+							<label for="exampleFormControlTextarea1" class="form-label h3">Коментарий к заказу</label>
+							<textarea style="resize: none;" name="description" rows="3" class="form-control mt-4" id="exampleFormControlTextarea1" rows="3"></textarea>
+						</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+					<button type="submit" class="btn btn-primary">Сохранить</button>
+				</div>
+				</form>
+			</div>
+
 		</div>
-		<div class="modal-body">
-			<form action="../back/CRUD/createOrder.php" method="post" enctype="multipart/form-data" class="row g-3">
-				<input type="hidden" name="user_id" value="<?php echo $user_id ?>">
-				<input type="hidden" name="total_price" value="<?php echo $total_price ?>">
-				<input type="hidden" name="items_list" value="<?php echo $total_items ?>">
-				<div class="col-4">
-					<label for="inputAddress" class="form-label h3">Улица</label>
-					<input type="text" name="street" class="form-control" id="inputAddress" required>
-				</div>
-				<div class="col-4">
-					<label for="inputAddress" class="form-label h3">Дом</label>
-					<input type="text" name="house" class="form-control" id="inputAddress" required>
-				</div>
-				<div class="col-4">
-					<label for="inputAddress" class="form-label h3">Квартира</label>
-					<input type="text" name="flat" class="form-control" id="inputAddress" required>
-				</div>
-
-				<div class="col-12">
-					<select class="form-select h3" name="time_dur" aria-label="Default select example">
-						<option selected>Как можно скорее</option>
-						<option></option>
-					</select>
-				</div>
-				<div class="col-12">
-					<label for="exampleFormControlTextarea1" class="form-label h3">Коментарий к заказу</label>
-					<textarea style="resize: none;" name="description" rows="3" class="form-control mt-4" id="exampleFormControlTextarea1" rows="3"></textarea>
-				</div>
-
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-			<button type="submit" class="btn btn-primary">Сохранить</button>
-		</div>
-		</form>
 	</div>
-
-</div>
-</div>
 	</main>
 	<footer class="text-center text-lg-start text-white" style="background-color: #212529">
 		<div class="container p-4 pb-0">
@@ -214,3 +214,20 @@ require_once '../back/dbConnection.php';
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
