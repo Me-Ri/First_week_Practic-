@@ -322,7 +322,7 @@ require_once '../back/dbConnection.php';
 
 	</main>
 
-	<footer class="text-center text-lg-start text-white fixed-bottom" style="background-color: #212529">
+	<footer class="text-center text-lg-start text-white mt-auto" style="background-color: #212529">
 		<div class="container p-4 pb-0">
 			<section class="">
 				<div class="row">
