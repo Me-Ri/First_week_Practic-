@@ -145,7 +145,7 @@ require_once '../back/dbConnection.php';
 
 		<?php
 		$user_id = $_SESSION['user']['id'];
-		$query = "SELECT Order_ID, Total_Price, Status FROM Orders WHERE User_ID = '$user_id'";
+		$query = "SELECT Order_ID, Total_Price, Status, item_list FROM Orders WHERE User_ID = '$user_id'";
 		$orders = $pdo->query($query);
 
 		while ($order = $orders->fetch(PDO::FETCH_ASSOC)) {
@@ -159,10 +159,18 @@ require_once '../back/dbConnection.php';
 									<h1>Заказ №<?php echo $order['order_id'] ?></h1>
 								</div>
 								<div class="col">
-									<h2><?php echo $order['total_price'] ?> p</h2>
+									<h2><?php echo $order['total_price'] ?> </h2>
 								</div>
 								<div class="col">
 									<h2>Статус <?php echo $order['status'] ?></h2>
+								</div>
+								<div class="col">
+									<details>
+										<summary class="fs-2">Показать заказ</summary>
+										<h4><?php $items = $order['item_list'];
+											echo substr($items, 0, -2);
+										?></h4>
+									</details>
 								</div>
 							</div>
 						</div>

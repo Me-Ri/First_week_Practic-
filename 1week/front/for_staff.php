@@ -39,6 +39,11 @@
 			break;
 	}
 
+	$role_status = [
+		"Cook" => ['ожидает готовки', 'в готовке', 'ожидает курьера', 'готов доставить', 'переданно курьеру', 'отмена'],
+		"Courier" => ['ожидает курьера', 'готов доставить', 'переданно курьеру', 'доставляется', 'доставлен', 'возникла ошибка']
+	];
+
 	// Обработка формы выбора статуса заказа
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		$order_id = $_POST['order_id'];
@@ -152,7 +157,7 @@
 									Пользователь: <?php echo $row['user_id']; ?>
 								</h2>
 							</div>
-							<?php if ($user_role == 'Cook' || $user_role == 'Manager') { ?>
+							<?php if (($user_role == 'Cook' || $user_role == 'Manager') && $row['courer_id'] != null) { ?>
 								<div class="row">
 									<h2>
 										Курьер: <?php echo $row['courer_id']; ?>
@@ -195,26 +200,34 @@
                                     <button type="submit" class="rounded-pill btn btn-primary">Изменить статус</button>
                                 </form>
                             <?php } ?>
-							<?php if ($user_role == 'Cook') { ?>
+							<?php if ($user_role == 'Cook') { 
+									$current_status = $row['status'];
+									if ($current_status == "ожидает курьера") 
+										$index = array_search($current_status, $role_status['Cook']) + 2;
+									else 
+										$index = array_search($current_status, $role_status['Cook']) + 1; 
+								?>
 								<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 									<input type="hidden" name="order_id" value="<?php echo $row['order_id']; ?>">
 									<select name="status">
-										<option value="в готовке">в готовке</option>
-										<option value="ожидает курьера">ожидает курьера</option>
-										<option value="отмена">отмена</option>
-										<option value="переданно курьеру">переданно курьеру</option>
+										<option value="<?php echo $role_status["Cook"][$index] ?>"><?php echo $role_status["Cook"][$index] ?></option>
+										<option value="<?php echo $role_status["Cook"][5] ?>"><?php echo $role_status["Cook"][5] ?></option>
 									</select>
 									<button type="submit" class="rounded-pill btn btn-primary">Изменить статус</button>
 								</form>
 							<?php } ?>
-							<?php if ($user_role == 'Courier') { ?>
+							<?php if ($user_role == 'Courier') { 
+									$current_status = $row['status'];
+									if ($current_status == "готов доставить") 
+										$index = array_search($current_status, $role_status['Courier']) + 2;
+									else 
+										$index = array_search($current_status, $role_status['Courier']) + 1;
+								?>
 								<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 									<input type="hidden" name="order_id" value="<?php echo $row['order_id']; ?>">
 									<select name="status">
-										<option value="готов доставить">готов доставить</option>
-										<option value="доставляется">доставляется</option>
-										<option value="доставлен">доставлен</option>
-										<option value="возникла ошибка">возникла ошибка</option>
+										<option value="<?php echo $role_status["Courier"][$index] ?>"><?php echo $role_status["Courier"][$index] ?></option>
+										<option value="<?php echo $role_status["Courier"][5] ?>"><?php echo $role_status["Courier"][5] ?></option>
 									</select>
 									<?php if ($user_role == 'Courier' && ($row['status'] == 'в готовке' || $row['status'] == 'отменен' || $row['status'] == 'доставлен' || $row['status'] == 'готов доставить')) { ?>
 										<button disabled type="submit" class="rounded-pill btn btn-primary">Изменить статус</button>
